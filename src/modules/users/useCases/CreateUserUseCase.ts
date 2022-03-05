@@ -4,7 +4,7 @@ import { UsersRepository } from "../infra/mongo/repositories/UsersRepository";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 
 @injectable()
-class CreateUserService {
+class CreateUserUseCase {
 
     private usersRepository : IUsersRepository;
 
@@ -38,4 +38,4 @@ class CreateUserService {
     }
 }
 
-export { CreateUserService };
+export { CreateUserUseCase };

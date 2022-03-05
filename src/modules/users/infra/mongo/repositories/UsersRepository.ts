@@ -19,6 +19,8 @@ class UsersRepository implements IUsersRepository {
         },
         {
             $set: {socket_id, avatar, name}
+        },{
+            new: true,
         });
 
         return user;
