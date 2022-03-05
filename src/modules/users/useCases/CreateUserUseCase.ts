@@ -1,42 +1,40 @@
 import { injectable } from "tsyringe";
-import { User } from "../schemas/User";
-
-interface ICreateUserDTO {
-    email: string;
-    socket_id: string;
-    avatar: string;
-    name: string;
-}
+import { IUserCreateDTO } from "../dtos/IUserDTO";
+import { UsersRepository } from "../infra/mongo/repositories/UsersRepository";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 
 @injectable()
 class CreateUserService {
 
-    async execute({ name, email, avatar, socket_id } : ICreateUserDTO) {
-        const userAlreadyExists = await User.findOne({
-            email
-        }).exec();
+    private usersRepository : IUsersRepository;
+
+    constructor() {
+        this.usersRepository = new UsersRepository();
+    }
+
+    async execute({ name, email, avatar, socket_id } : IUserCreateDTO) {
+        const userAlreadyExists = await this.usersRepository.findByEmail(email);
+        
 
         if(userAlreadyExists) {
-            const user = await User.findByIdAndUpdate({
-                _id: userAlreadyExists._id
-            },
-            {
-                $set: {socket_id, avatar, name}
-            });
-
+            const user = await this.usersRepository.findByIdAndUpdate({
+                avatar, 
+                id:userAlreadyExists._id, 
+                name, 
+                socket_id}
+            );
+            
             return user;
         } else {
-            const user = await User.create({
-                email,
-                socket_id,
+            const user = await this.usersRepository.create({
                 avatar,
-                name
-            });
+                email,
+                name,
+                socket_id
+            })
 
             return user;
         }
-
-        
     }
 }
 
