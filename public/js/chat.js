@@ -40,7 +40,6 @@ function onLoad() {
     });
 }
 
-
 function addUser(user) {
     const usersList = document.getElementById("users_list");
     usersList.innerHTML += `
@@ -57,5 +56,11 @@ function addUser(user) {
         </li>
     `;
 }
+
+document.getElementById("users_list").addEventListener("click", (event) => {
+    if(event.target && event.target.matches("li.user_name_list")) {
+        const idUser = event.target.getAttribute("idUser");
+    }
+});
 
 onLoad();

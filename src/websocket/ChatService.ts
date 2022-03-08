@@ -17,6 +17,8 @@ io.on("connect", (socket) => {
         const getAllUsersUseCase = container.resolve(GetAllUsersUseCase);
         const users = await getAllUsersUseCase.execute();
 
+        console.log(users);
+
         callback(users);
     });
 });

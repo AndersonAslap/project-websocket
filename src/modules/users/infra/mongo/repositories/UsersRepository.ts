@@ -39,6 +39,7 @@ class UsersRepository implements IUsersRepository {
 
     async findUsers() : Promise<any[]> {
         const users = await User.find();
+        console.log(users);
         return users;
     }
     
