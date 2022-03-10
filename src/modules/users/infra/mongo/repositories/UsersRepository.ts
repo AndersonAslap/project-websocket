@@ -39,8 +39,16 @@ class UsersRepository implements IUsersRepository {
 
     async findUsers() : Promise<any[]> {
         const users = await User.find();
-        console.log(users);
+
         return users;
+    }
+
+    async findBySocketId(socket_id: string) : Promise<any> {
+        const user = await User.findOne({
+            socket_id
+        });
+
+        return user;
     }
     
 }

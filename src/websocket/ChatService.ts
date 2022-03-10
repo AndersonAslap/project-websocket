@@ -1,5 +1,6 @@
 import { container } from "tsyringe";
 import { io } from "../http";
+import { CreateChatRoomUseCase } from "../modules/chatRoom/useCases/CreateChatRoomUseCase";
 import { CreateUserUseCase } from "../modules/users/useCases/CreateUserUseCase";
 import { GetAllUsersUseCase } from "../modules/users/useCases/GetAllUsersUseCase";
 
@@ -20,5 +21,9 @@ io.on("connect", (socket) => {
         console.log(users);
 
         callback(users);
+    });
+
+    socket.on("start_chat", (data) => {
+        const createChatRoomUseCase = container.resolve(CreateChatRoomUseCase);
     });
 });
