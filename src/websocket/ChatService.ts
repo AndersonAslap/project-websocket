@@ -3,6 +3,7 @@ import { io } from "../http";
 import { CreateChatRoomUseCase } from "../modules/chatRoom/useCases/CreateChatRoomUseCase";
 import { CreateUserUseCase } from "../modules/users/useCases/CreateUserUseCase";
 import { GetAllUsersUseCase } from "../modules/users/useCases/GetAllUsersUseCase";
+import { GetUserBySocketIdUseCase } from "../modules/users/useCases/GetUserBySocketIdUseCase";
 
 io.on("connect", (socket) => {
     socket.on("start", async (data) => {
@@ -23,7 +24,14 @@ io.on("connect", (socket) => {
         callback(users);
     });
 
-    socket.on("start_chat", (data) => {
+    socket.on("start_chat", async (data, callback) => {
         const createChatRoomUseCase = container.resolve(CreateChatRoomUseCase);
+        const getUserBySocketIdUseCase = container.resolve(GetUserBySocketIdUseCase);
+        
+        const userLogged = await getUserBySocketIdUseCase.execute(socket.id);
+
+        const room = await createChatRoomUseCase.execute([data.idUser, userLogged._id]);
+    
+        callback(room);
     });
 });
