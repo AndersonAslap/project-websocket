@@ -64,7 +64,7 @@ document.getElementById("users_list").addEventListener("click", (event) => {
         const idUser = event.target.getAttribute("idUser");
 
         socket.emit("start_chat", {idUser} , (data) => {
-            roomId = data.room.idChatRoom;
+            //roomId = data.room.idChatRoom;
             console.log(data);
         });
     }

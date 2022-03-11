@@ -12,6 +12,7 @@ class GetUserBySocketIdUseCase {
 
     async execute(socket_id: string) : Promise<any> {
         const user = await this.usersRepository.findBySocketId(socket_id);
+        console.log(socket_id)
         return user;
     }
 }

@@ -13,7 +13,6 @@ class CreateChatRoomUseCase {
 
     async execute(idUsers: String[]) {
         const room = await this.chatRoomRepository.create(idUsers);
-
         return room;
     }
 }
