@@ -5,8 +5,10 @@ import { IUsersRepository } from "../../../repositories/IUsersRepository";
 
 class UsersRepository implements IUsersRepository {
 
+    private repository = User;
+
     async findByEmail(email: string): Promise<any> {
-        const user = await User.findOne({
+        const user = await this.repository.findOne({
             email
         }).exec();
 
@@ -14,7 +16,7 @@ class UsersRepository implements IUsersRepository {
     }
 
     async findByIdAndUpdate({id, avatar, name, socket_id}: IUserUpdateDTO): Promise<any> {
-        const user = await User.findByIdAndUpdate({
+        const user = await this.repository.findByIdAndUpdate({
             _id: id
         },
         {
@@ -27,7 +29,7 @@ class UsersRepository implements IUsersRepository {
     }
 
     async create({avatar, email, name, socket_id}: IUserCreateDTO): Promise<any> {
-        const user = await User.create({
+        const user = await this.repository.create({
             email,
             socket_id,
             avatar,
@@ -38,13 +40,13 @@ class UsersRepository implements IUsersRepository {
     }
 
     async findUsers() : Promise<any[]> {
-        const users = await User.find();
+        const users = await this.repository.find();
 
         return users;
     }
 
     async findBySocketId(socket_id: string) : Promise<any> {
-        const user = await User.findOne({
+        const user = await this.repository.findOne({
             socket_id
         });
 

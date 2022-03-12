@@ -12,7 +12,9 @@ const MessageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Users"
     },
-    text: String,
+    text: {
+        type: String
+    },
     created_at: {
         type: Date,
         default: Date.now()
