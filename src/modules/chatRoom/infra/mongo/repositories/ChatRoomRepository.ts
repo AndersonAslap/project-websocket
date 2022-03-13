@@ -26,6 +26,13 @@ class ChatRoomRepository implements IChatRoomRepository {
         return room;
     }
 
+    async findById(idChatRoom : string) : Promise<any> {
+        const room = await this.repository.findOne({
+            idChatRoom
+        }).populate("idUsers").exec();
+
+        return room;
+    }
 }
 
 export { ChatRoomRepository };

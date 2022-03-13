@@ -1,6 +1,7 @@
 import { container } from "tsyringe";
 import { io } from "../http";
 import { CreateChatRoomUseCase } from "../modules/chatRoom/useCases/CreateChatRoomUseCase";
+import { GetChatRoomByIdUseCase } from "../modules/chatRoom/useCases/GetChatRoomByIdUseCase";
 import { GetChatRoomByUsers } from "../modules/chatRoom/useCases/GetChatRoomByUsersUseCase";
 import { CreateMessageUseCase } from "../modules/message/useCases/CreateMessageUseCase";
 import { GetMessagesByChatRoomUseCase } from "../modules/message/useCases/GetMessagesByChatRoomUseCase";
@@ -48,9 +49,10 @@ io.on("connect", (socket) => {
 
     socket.on("message", async (data) => {
         const getUserBySocketIdUseCase = container.resolve(GetUserBySocketIdUseCase);
-        const user = await getUserBySocketIdUseCase.execute(socket.id);
-        
         const createMessageUseCase = container.resolve(CreateMessageUseCase);
+        const getChatRoomByIdUseCase = container.resolve(GetChatRoomByIdUseCase);
+                
+        const user = await getUserBySocketIdUseCase.execute(socket.id);
 
         const message = await createMessageUseCase.execute({
             to: user._id,
@@ -58,9 +60,19 @@ io.on("connect", (socket) => {
             roomId: data.idChatRoom
         });
 
+        const room = await getChatRoomByIdUseCase.execute(data.idChatRoom);
+
+        const userFrom = room.idUsers.find(response => String(response._id) !== String(user._id));
+
         io.to(data.idChatRoom).emit("message", {
             message,
             user
         });
+
+        io.to(userFrom.socket_id).emit("notification", {
+            newMessage: true,
+            roomId: data.idChatRoom,
+            from: user
+        })
     });
 });
