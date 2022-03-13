@@ -15,7 +15,16 @@ class MessageRepository implements IMessageRepository {
         
         return message;
     }
+    
+    async findByChatRoom(roomId : string) : Promise<any> {
+        const messages = await this.repository.find({
+            roomId
+        })
+        .populate("to")
+        .exec();
 
+        return messages;
+    }
 }
 
 export { MessageRepository };

@@ -3,6 +3,7 @@ import { io } from "../http";
 import { CreateChatRoomUseCase } from "../modules/chatRoom/useCases/CreateChatRoomUseCase";
 import { GetChatRoomByUsers } from "../modules/chatRoom/useCases/GetChatRoomByUsersUseCase";
 import { CreateMessageUseCase } from "../modules/message/useCases/CreateMessageUseCase";
+import { GetMessagesByChatRoomUseCase } from "../modules/message/useCases/GetMessagesByChatRoomUseCase";
 import { CreateUserUseCase } from "../modules/users/useCases/CreateUserUseCase";
 import { GetAllUsersUseCase } from "../modules/users/useCases/GetAllUsersUseCase";
 import { GetUserBySocketIdUseCase } from "../modules/users/useCases/GetUserBySocketIdUseCase";
@@ -28,6 +29,7 @@ io.on("connect", (socket) => {
         const createChatRoomUseCase = container.resolve(CreateChatRoomUseCase);
         const getUserBySocketIdUseCase = container.resolve(GetUserBySocketIdUseCase);
         const getChatRoomByUsers = container.resolve(GetChatRoomByUsers);
+        const getMessagesByChatRoomUseCase = container.resolve(GetMessagesByChatRoomUseCase);
 
         const userLogged = await getUserBySocketIdUseCase.execute(socket.id);
         
@@ -38,8 +40,10 @@ io.on("connect", (socket) => {
         }
 
         socket.join(room.idChatRoom);
+
+        const messages = await getMessagesByChatRoomUseCase.execute(room.idChatRoom);
     
-        callback(room);
+        callback({room, messages});
     });
 
     socket.on("message", async (data) => {
