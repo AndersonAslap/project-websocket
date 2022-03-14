@@ -56,21 +56,37 @@ function onLoad() {
     });
 }
 
+function removeMessage(msg) {
+    if (confirm("Deseja remover menssagem")) {
+        console.log(msg)
+    }
+}
+
 function addMessage(data) {
     const divMessageUser = document.getElementById("message_user");
 
     divMessageUser.innerHTML += `
-    <span class="user_name user_name_date">
+    <span class="user_name user_name_date ${data.message._id}">
         <img
             class="img_user"
             src=${data.user.avatar}
         />
         
-        <strong>${data.user.name}</strong>
+        <span>
+        <strong>${data.user.name}</strong><br>
+        <span>${dayjs(data.message.created_at).format("DD/MM/YYYY HH:mm")}</span>
+        </span>
         
-        <span> &nbsp; ${dayjs(data.message.created_at).format("DD/MM/YYYY HH:mm")}</span></span
+        &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+        
+            <a href="#" onclick="removeMessage('${data.message._id}')">
+            <img style="width:30px;" src="../assets/lixeira-4.png" />
+        <a>
+        
+    </span
     >
-  <div class="messages">
+  <div class="messages ${data.message._id}">
     <span class="chat_message">${data.message.text}</span>
   </div>`;
 }
